@@ -3,54 +3,7 @@ let app = require('express')();
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
 
-let storage = [
-    {
-        id: '1',
-        p1: 0,
-        p2: 1,
-        p3: 0,
-        p4: 1,
-        p5: 0,
-        p6: 1,
-        p7: 0,
-        p8: 1,
-        p9: 0,
-        p10: 1,
-        p11: 0,
-        p12: 1,
-        p13: 0,
-        p14: 1,
-        p15: 0,
-        p16: 1,
-        p17: 0,
-        p18: 1,
-        p19: 0,
-        p20: 1
-    },
-    {
-        id: '2',
-        p1: 1,
-        p2: 0,
-        p3: 1,
-        p4: 0,
-        p5: 1,
-        p6: 0,
-        p7: 1,
-        p8: 0,
-        p9: 1,
-        p10: 0,
-        p11: 1,
-        p12: 0,
-        p13: 1,
-        p14: 0,
-        p15: 1,
-        p16: 0,
-        p17: 1,
-        p18: 0,
-        p19: 1,
-        p20: 0
-    },
-]
+let storage = []
 let model = {
     'id': { type: 'String' },
     'p1': { type: 'Double', range: [-1, 1] },
@@ -87,14 +40,13 @@ app.get('/update', async (req, res) => {
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/public/index.html');
 });
+app.get('/js/index.js', function(req, res){
+    res.sendFile(__dirname + '/public/js/index.js');
+});
 
 io.on('connection', function(socket) {
     socket.emit('data', storage);
 })
-
-setInterval( () => {
-    io.sockets.emit('data', storage);
-}, 1000)
 
 http.listen(3000, function(){
     console.log('listening on *:3000');
