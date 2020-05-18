@@ -1,7 +1,8 @@
 'use strict'
-let app = require('express')();
-let http = require('http').Server(app);
-let io = require('socket.io')(http);
+let express = require('express')
+let app = express()
+let http = require('http').Server(app)
+let io = require('socket.io')(http)
 
 let storage = []
 let model = {
@@ -28,11 +29,14 @@ let model = {
     'p20': { type: 'Double', range: [-1, 1] }
 }
 
-app.get('/update', async (req, res) => {
-    if (!req || !req.query || !req.query.id) {
+app.use(express.json())
+app.use(express.urlencoded())
+
+app.post('/update', async (req, res) => {
+    if (!req || !req.body || !req.body.id) {
         return res.status(400).send('Fill in the parameters');
     }
-    saveData(req.query)
+    saveData(req.body)
     io.sockets.emit('data', storage);
     res.send();
 })
